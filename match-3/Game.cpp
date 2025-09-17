@@ -5,7 +5,7 @@ Game::Game() {
 	window = new RenderWindow(VideoMode(800, 600), "Match-3", Style::Close);
 	board = new Board(8, 8);
 	score = 0;
-	moves = 2;
+	moves = 20;
 
 	if (!font.loadFromFile("imagenes/arial.ttf")) {
 		cout << "No se pudo cargar la fuente\n";
@@ -13,7 +13,7 @@ Game::Game() {
 
 	scoreText.setFont(font);
 	scoreText.setCharacterSize(20);
-	scoreText.setFillColor(Color::White);
+	scoreText.setFillColor(Color::Black);
 	scoreText.setPosition(10, 550);
 	scoreText.setString("Score: 0 | Moves: "+to_string(moves));
 	if (!backgroundTexture.loadFromFile("imagenes/fondo.png"))
