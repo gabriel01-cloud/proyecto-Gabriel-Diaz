@@ -1,12 +1,11 @@
-#include "Game.h"
+﻿#include "Game.h"
 using namespace sf;
 using namespace std;
 Game::Game() {
 	window = new RenderWindow(VideoMode(800, 600), "Match-3", Style::Close);
 	board = new Board(8, 8);
 	score = 0;
-	moves = 20;
-	gameState = GameState::start;
+	moves = 2;
 
 	if (!font.loadFromFile("imagenes/arial.ttf")) {
 		cout << "No se pudo cargar la fuente\n";
@@ -16,7 +15,7 @@ Game::Game() {
 	scoreText.setCharacterSize(20);
 	scoreText.setFillColor(Color::White);
 	scoreText.setPosition(10, 550);
-	scoreText.setString("Score: 0 | Moves: 20");
+	scoreText.setString("Score: 0 | Moves: "+to_string(moves));
 	if (!backgroundTexture.loadFromFile("imagenes/fondo.png"))
 		cout << "No se pudo abrir";
 	backgroundSprite.setTexture(backgroundTexture);
@@ -33,7 +32,6 @@ Game::~Game() {
 void Game::run() {
 	showStartScreen();
 	if (!window->isOpen())return;
-	gameState = GameState::Playing;
 	while (window->isOpen()) {
 		processEvents();
 		update();
@@ -56,7 +54,6 @@ void Game::handleClick(Vector2i cell) {
 		return;
 	}
 	board->swapGems(firstCell, cell);
-	moves--;
 	cout << "intercambiadas(" << firstCell.x << "," << firstCell.y << ") con (" << cell.x << "," << cell.y << ")\n";
 
 	auto matches = board->findMatches();
@@ -90,6 +87,9 @@ void Game::processEvents() {
 void Game::update() {
 
 	scoreText.setString("Score: " + to_string(score) + " | Moves: " + to_string(moves));
+	if (moves <= 0) {
+		showEndScreen();
+	}
 }
 
 void Game::render() {
@@ -107,68 +107,80 @@ void Game::render() {
 	window->draw(scoreText);
 	window->display();
 }
+
 void Game::resolveMatches() {
 	auto matches = board->findMatches();
 	bool validMove = !matches.empty();
-	while (!matches.empty()) {
-
-		board->removeMatches(matches);
-		score += 10;
 	if (validMove) {
 		moves--;
 	}
 
-		render();
-		sleep(milliseconds(400));
+	while (!matches.empty()) {
+		board->removeMatches(matches);
+		score += matches.size()*10;
 
-		board->dropGems();
 		render();
-		sleep(milliseconds(400));
+		board->dropGems();
+		while (board->isMoving() && window->isOpen()) {
+			board->update();
+			render();
+		}
 
 		board->refill();
-		render();
-		sleep(milliseconds(400));
-
+		while (board->isMoving() && window->isOpen()) {
+			board->update();
+			render();
+		}
 		matches = board->findMatches();
 	}
+	if (moves <= 0) {
+		showEndScreen();
+	}
+}
+
+
+RectangleShape Game::createButton(Vector2f size, Vector2f position, Color color)
+{
+	RectangleShape button(size);
+	button.setFillColor(color);
+	button.setPosition(position);
+	return button;
+}
+
+Text Game::createText(const string& str, Font& font, unsigned int size, Color color, Vector2f position)
+{
+	Text text(str, font, size);
+	text.setFillColor(color);
+	text.setPosition(position);
+	return text;
+}
+
+bool Game::isButtonClicked(RenderWindow& window, RectangleShape& button, Event& event)
+{
+	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+		Vector2i mousePos = Mouse::getPosition(window);
+		return button.getGlobalBounds().contains(mousePos.x, mousePos.y);
+	}
+	return false;
 }
 
 void Game::showStartScreen()
 {
-
-	Font font;
-	if (!font.loadFromFile("imagenes/arial.ttf")) {
-		cout << "No se pudo cargar fuente\n";
-		return;
-	}
-
-	Text title("MATCH-3", font, 60);
-	title.setFillColor(Color::White);
-	title.setPosition(220, 100);
-
-	RectangleShape playButton(Vector2f(200, 80));
-	playButton.setFillColor(Color(100, 200, 100));
-	playButton.setPosition(300, 300);
-
-	Text playText("JUGAR", font, 40);
-	playText.setFillColor(Color::Black);
-	playText.setPosition(345, 310);
+	Text title = createText("match-3", font, 60, Color::White, { 220,100 });
+	RectangleShape playButton = createButton({ 200,80 }, { 300,300 }, Color(100, 200, 100));
+	Text playText = createText("JUGAR", font, 40, Color::Black, { 345,310 });
 
 	bool startGame = false;
 	while (window->isOpen() && !startGame) {
 		Event event;
 		while (window->pollEvent(event)) {
-			if (event.type == Event::Closed)
+			if (event.type == Event::Closed) {
 				window->close();
-
-			if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
-				Vector2i mousePos = Mouse::getPosition(*window);
-				if (playButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-					startGame = true;
-				}
+			}
+			if (isButtonClicked(*window, playButton, event)) {
+				startGame = true;
 			}
 		}
-
 		window->clear(Color::Black);
 		window->draw(title);
 		window->draw(playButton);
@@ -176,5 +188,48 @@ void Game::showStartScreen()
 		window->display();
 	}
 }
-// prueba push
+void Game::showEndScreen()
+{
+	string scoreStr = "PUNTAJE FINAL: " + to_string(score);
+	Text finalScore = createText(scoreStr, font, 40, Color::White, { 220, 150 });
 
+	RectangleShape restartButton = createButton({ 200, 80 }, { 300, 300 }, Color(100, 200, 100));
+	Text restartText = createText("REINICIAR", font, 30, Color::Black, { 325, 320 });
+
+	RectangleShape exitButton = createButton({ 200, 80 }, { 300, 420 }, Color(200, 100, 100));
+	Text exitText = createText("SALIR", font, 30, Color::Black, { 365, 440 });
+
+	bool waiting = true;
+	while (window->isOpen() && waiting) {
+		Event event;
+		while (window->pollEvent(event)) {
+			if (event.type == Event::Closed) window->close();
+
+			if (isButtonClicked(*window, restartButton, event)) {
+				delete board;
+				board = new Board(8, 8);
+				score = 0;
+				moves = 20;
+
+				firstSelected = false;
+				firstCell = { -1, -1 };
+
+				scoreText.setString("Score: 0 | Moves: " + to_string(moves));
+
+				return;
+			}
+
+			if (isButtonClicked(*window, exitButton, event)) {
+				window->close();
+				return;
+			}
+		}
+		window->clear(Color::Black);
+		window->draw(finalScore);
+		window->draw(restartButton);
+		window->draw(restartText);
+		window->draw(exitButton);
+		window->draw(exitText);
+		window->display();
+	}
+}

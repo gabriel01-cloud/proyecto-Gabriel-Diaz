@@ -10,7 +10,7 @@ Board::Board(int w, int h) {
 		grid[i] = new Gem * [width];
 		for (int j = 0; j < width; j++) {
 			int type = rand() % 5;
-			grid[i][j] = new Gem(type, j * 50, i * 50);
+			grid[i][j] = new Gem(type, j * 64, i * 64);
 		}
 	}
 	loadTextures();
@@ -50,7 +50,7 @@ void Board::draw(RenderWindow& window) {
 			if (!textures[type].getSize().x)continue;
 			Sprite sprite;
 			sprite.setTexture(textures[type]);
-			sprite.setPosition(j * 64, i * 64);
+			sprite.setPosition(grid[i][j]->getX(), grid[i][j]->getY());
 			window.draw(sprite);
 		}
 	}
@@ -71,8 +71,8 @@ void Board::swapGems(sf::Vector2i a, sf::Vector2i b) {
 	Gem* temp = grid[a.y][a.x];
 	grid[a.y][a.x] = grid[b.y][b.x];
 	grid[b.y][b.x] = temp;
-	grid[a.y][a.x]->setPosition(a.x * 64, a.y * 64);
-	grid[b.y][b.x]->setPosition(b.x * 64, b.y * 64);
+	grid[a.y][a.x]->setTargetPosition(a.x * 64, a.y * 64);
+	grid[b.y][b.x]->setTargetPosition(b.x * 64, b.y * 64);
 }
 vector<Vector2i> Board::findMatches() {
 	vector<Vector2i>matches;
@@ -126,17 +126,37 @@ void Board::removeMatches(const vector<Vector2i>& matches) {
 void Board::dropGems() {
 	for (int x = 0; x < width; x++) {
 		for (int y = height - 1; y >= 0; y--) {
-			if (grid[y][x]->getType() != -1)
-				continue;
+			if (grid[y][x]->getType() != -1) continue;
+
 			int ny = y - 1;
-			while (ny >= 0 && grid[ny][x]->getType() == -1)
-				ny--;
-			if (ny < 0)
-				continue;
+			while (ny >= 0 && grid[ny][x]->getType() == -1) ny--;
+
+			if (ny < 0) continue;
 			grid[y][x]->setType(grid[ny][x]->getType());
 			grid[y][x]->setPosition(grid[ny][x]->getX(), grid[ny][x]->getY());
 			grid[y][x]->setTargetPosition(x * 64, y * 64);
+
 			grid[ny][x]->setType(-1);
 		}
 	}
+}
+
+void Board::update() {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			grid[i][j]->update();
+		}
+	}
+}
+
+bool Board::isMoving() {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			if (grid[i][j]->getType() == -1) continue;
+			if (grid[i][j]->getX() != j * 64 || grid[i][j]->getY() != i * 64) {
+				return true;
+			}
+		}
+	}
+	return false;
 }

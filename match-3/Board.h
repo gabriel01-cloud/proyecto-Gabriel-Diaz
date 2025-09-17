@@ -25,6 +25,8 @@ public:
 	vector<Vector2i> findMatches();
 	void removeMatches(const vector<Vector2i>& matches);
 	void dropGems();
+	void update();
+	bool isMoving();
 };
 
 #endif

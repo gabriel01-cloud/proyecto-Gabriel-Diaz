@@ -44,7 +44,7 @@ void Gem::update() {
     }
     if (x < targetX) {
         x += speed;
-        if (y > targetY)y = targetY;
+        if (x > targetX)x = targetX;
     }
     if (x > targetX) {
         x -= speed;
