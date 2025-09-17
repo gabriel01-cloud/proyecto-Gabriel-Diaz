@@ -1,0 +1,23 @@
+﻿  Game.cpp
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(101,53): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(101,35): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(120,26): warning C4267: '+=': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,64): warning C4244: 'argumento': conversión de 'T' a 'T'; posible pérdida de datos
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,64): warning C4244:         with
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,64): warning C4244:         [
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,64): warning C4244:             T=int
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,64): warning C4244:         ]
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,64): warning C4244:         and
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,64): warning C4244:         [
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,64): warning C4244:             T=float
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,64): warning C4244:         ]
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,52): warning C4244: 'argumento': conversión de 'T' a 'T'; posible pérdida de datos
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,52): warning C4244:         with
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,52): warning C4244:         [
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,52): warning C4244:             T=int
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,52): warning C4244:         ]
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,52): warning C4244:         and
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,52): warning C4244:         [
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,52): warning C4244:             T=float
+C:\Users\diazv\OneDrive\Escritorio\python\match-3\match-3\Game.cpp(162,52): warning C4244:         ]
+  match-3.vcxproj -> C:\Users\diazv\OneDrive\Escritorio\python\match-3\x64\Debug\match-3.exe
