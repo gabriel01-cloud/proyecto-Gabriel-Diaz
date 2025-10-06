@@ -135,15 +135,23 @@ sfml-system-d.lib
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Board.cpp" />
+    <ClCompile Include="BoardLogic.cpp" />
+    <ClCompile Include="BoardRender.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameUI.cpp" />
     <ClCompile Include="Gem.cpp" />
     <ClCompile Include="match-3.cpp" />
+    <ClCompile Include="Objective.cpp" />
+    <ClCompile Include="SpecialGem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Board.h" />
+    <ClInclude Include="BoardLogic.h" />
+    <ClInclude Include="BoardRender.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameUI.h" />
     <ClInclude Include="Gem.h" />
+    <ClInclude Include="Objective.h" />
+    <ClInclude Include="SpecialGem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

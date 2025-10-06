@@ -1,27 +1,37 @@
 #pragma once
 #ifndef GEM_H
 #define GEM_H
-
 #include <SFML/Graphics.hpp>
+class Board;
 
 class Gem {
 private:
 	int type;
 	int x, y;
 	int targetX, targetY;
+	int col, row;
+	int alpha;
+	bool animClearing;
+	bool marked;
 public:
 	Gem(int t, int posX, int posY);
+	virtual~Gem() {}
 
-	int getType() const;
-	void setType(int t);
+	virtual int onMatch(Board& board) = 0;
+	virtual void update();
 
-	int getX() const;
-	int getY() const;
+	int getType() const { return type; }
+	void setType(int t) { type = t; }
+	int getX() const { return x; }
+	int getY() const { return y; }
 
 	void setPosition(int posX, int posY);
 	void setTargetPosition(int posX, int posY);
+	void setGrid(int c, int r);
 
-	void update();
+	void markForClear() { animClearing = true; }
+	bool isMarked()const { return marked; }
+	bool isIdle()const { return x == targetX && y == targetY && !animClearing; }
 };
 
 #endif

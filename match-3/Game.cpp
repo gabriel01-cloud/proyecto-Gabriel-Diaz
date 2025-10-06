@@ -23,12 +23,10 @@ Game::Game() {
 	firstSelected = false;
 	firstCell = { -1,-1 };
 }
-
 Game::~Game() {
 	delete board;
 	delete window;
 }
-
 void Game::run() {
 	showStartScreen();
 	if (!window->isOpen())return;
@@ -38,7 +36,6 @@ void Game::run() {
 		render();
 	}
 }
-
 void Game::handleClick(Vector2i cell) {
 	if (!firstSelected) {
 		firstSelected = true;
@@ -137,8 +134,6 @@ void Game::resolveMatches() {
 		showEndScreen();
 	}
 }
-
-
 RectangleShape Game::createButton(Vector2f size, Vector2f position, Color color)
 {
 	RectangleShape button(size);
