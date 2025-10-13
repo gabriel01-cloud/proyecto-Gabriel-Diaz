@@ -1,9 +1,11 @@
 ﻿#include "Game.h"
+
 using namespace sf;
 using namespace std;
 Game::Game() {
 	window = new RenderWindow(VideoMode(800, 600), "Match-3", Style::Close);
-	board = new Board(8, 8);
+	logic = new BoardLogic(8, 8);
+	renderBoard.loadTextures();
 	score = 0;
 	moves = 20;
 
@@ -15,7 +17,7 @@ Game::Game() {
 	scoreText.setCharacterSize(20);
 	scoreText.setFillColor(Color::Black);
 	scoreText.setPosition(10, 550);
-	scoreText.setString("Score: 0 | Moves: "+to_string(moves));
+	scoreText.setString("Score: 0 | Moves: " + to_string(moves));
 	if (!backgroundTexture.loadFromFile("imagenes/fondo.png"))
 		cout << "No se pudo abrir";
 	backgroundSprite.setTexture(backgroundTexture);
@@ -24,7 +26,7 @@ Game::Game() {
 	firstCell = { -1,-1 };
 }
 Game::~Game() {
-	delete board;
+	delete logic;
 	delete window;
 }
 void Game::run() {
@@ -50,12 +52,13 @@ void Game::handleClick(Vector2i cell) {
 		firstSelected = false;
 		return;
 	}
-	board->swapGems(firstCell, cell);
+	logic->swapGems(firstCell, cell);
 	cout << "intercambiadas(" << firstCell.x << "," << firstCell.y << ") con (" << cell.x << "," << cell.y << ")\n";
 
-	auto matches = board->findMatches();
-	if (matches.empty()) {
-		board->swapGems(firstCell, cell);
+	Vector2i matches[MAX_MATCHES];
+	int count = logic->findMatches(matches, MAX_MATCHES);
+	if (count==0) {
+		logic->swapGems(firstCell, cell);
 		cout << "Swap revertido: no se genero combinacion\n";
 		firstSelected = false;
 		return;
@@ -92,7 +95,7 @@ void Game::update() {
 void Game::render() {
 	window->clear();
 	window->draw(backgroundSprite);
-	board->draw(*window);
+	renderBoard.draw(*window,*logic);
 	if (firstSelected) {
 		RectangleShape outline(Vector2f(64, 64));
 		outline.setPosition(firstCell.x * 64, firstCell.y * 64);
@@ -106,29 +109,32 @@ void Game::render() {
 }
 
 void Game::resolveMatches() {
-	auto matches = board->findMatches();
-	bool validMove = !matches.empty();
+	Vector2i matches[MAX_MATCHES];
+	int count =logic->findMatches(matches,MAX_MATCHES);
+	bool validMove = (count>0);
 	if (validMove) {
 		moves--;
 	}
 
-	while (!matches.empty()) {
-		board->removeMatches(matches);
-		score += matches.size()*10;
+	while (count>0) {
+		logic->promoteIfRun4Plus(matches, count);
+		logic->applyOnMatchAndExplosions(matches, count);
+		logic->removeMatches(matches, count);
+		score += count * 10;
 
 		render();
-		board->dropGems();
-		while (board->isMoving() && window->isOpen()) {
-			board->update();
+		logic->dropGems();
+		while (logic->isMoving() && window->isOpen()) {
+			logic->update();
 			render();
 		}
 
-		board->refill();
-		while (board->isMoving() && window->isOpen()) {
-			board->update();
+		logic->refill();
+		while (logic->isMoving() && window->isOpen()) {
+			logic->update();
 			render();
 		}
-		matches = board->findMatches();
+		count = logic->findMatches(matches,MAX_MATCHES);
 	}
 	if (moves <= 0) {
 		showEndScreen();
@@ -154,7 +160,7 @@ bool Game::isButtonClicked(RenderWindow& window, RectangleShape& button, Event& 
 {
 	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
 		Vector2i mousePos = Mouse::getPosition(window);
-		return button.getGlobalBounds().contains(mousePos.x, mousePos.y);
+		return button.getGlobalBounds().contains((float)mousePos.x, (float)mousePos.y);
 	}
 	return false;
 }
@@ -201,8 +207,8 @@ void Game::showEndScreen()
 			if (event.type == Event::Closed) window->close();
 
 			if (isButtonClicked(*window, restartButton, event)) {
-				delete board;
-				board = new Board(8, 8);
+				delete logic;
+				logic = new BoardLogic(8, 8);
 				score = 0;
 				moves = 20;
 

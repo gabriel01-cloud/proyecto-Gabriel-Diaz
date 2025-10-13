@@ -2,7 +2,8 @@
 #ifndef GEM_H
 #define GEM_H
 #include <SFML/Graphics.hpp>
-class Board;
+
+class BoardLogic;
 
 class Gem {
 private:
@@ -17,7 +18,7 @@ public:
 	Gem(int t, int posX, int posY);
 	virtual~Gem() {}
 
-	virtual int onMatch(Board& board) = 0;
+	virtual int onMatch(BoardLogic& board) = 0;
 	virtual void update();
 
 	int getType() const { return type; }

@@ -1,7 +1,7 @@
 #include "SpecialGem.h"
 #include <iostream>
 using namespace std;
-int SpecialGem::onMatch(Board& board) {
+int SpecialGem::onMatch(BoardLogic& board) {
 	markForClear();
 	if (special == BOMB) {
 		cout << "Bomba activada!" << endl;

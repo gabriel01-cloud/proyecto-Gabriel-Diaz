@@ -1,5 +1,4 @@
 #include "Gem.h"
-#include "Board.h"
 
 Gem::Gem(int t, int posX, int posY) : col(posX / 64), row(posY / 64), alpha(255), animClearing(false), marked(false) {
 	type = t;

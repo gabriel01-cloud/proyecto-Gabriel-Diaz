@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Gem.h"
-#include "SpecialGem.h"
+
 #define MAX_MATCHES 64
 using namespace sf;
 using namespace std;
@@ -33,7 +33,5 @@ public:
 	int getHeight() const { return height; }
 	Gem* get(int c, int r) const { return grid[r][c]; }
 };
-	void loadTextures();
-	void draw(RenderWindow& window);
 
 #endif

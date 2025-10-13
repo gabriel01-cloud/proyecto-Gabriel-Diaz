@@ -1,6 +1,8 @@
 #pragma once
 #include "Gem.h"
-#include "BoardLogic.h"
+
+class BoardLogic;
+
 enum SpecialType {
 NORMAL,
 BOMB
@@ -13,5 +15,5 @@ public:
 SpecialGem(int t, int posX, int posY, SpecialType sp = NORMAL) :Gem(t, posX, posY), special(sp) {}
 void setSpecial(SpecialType sp) { special = sp; }
 SpecialType getSpecial()const { return special; }
-int onMatch(Board& board)override;
+int onMatch(BoardLogic& board)override;
 };

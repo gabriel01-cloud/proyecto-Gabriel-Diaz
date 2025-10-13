@@ -1,5 +1,5 @@
 #include "BoardLogic.h"
-
+#include "SpecialGem.h"
 BoardLogic::BoardLogic(int w, int h) : width(w), height(h) {
 	srand(time(NULL));
 	grid = new Gem * *[height];
@@ -7,7 +7,7 @@ BoardLogic::BoardLogic(int w, int h) : width(w), height(h) {
 		grid[i] = new Gem * [width];
 		for (int j = 0; j < width; j++) {
 			int type = rand() % 5;
-			grid[i][j] = new SpecialGem(type, j * 64, i * 64);
+			grid[i][j] = new SpecialGem(type, j * 64, i * 64,NORMAL);
 			grid[i][j]->setGrid(j, i);
 		}
 	}
@@ -102,7 +102,7 @@ void BoardLogic::applyOnMatchAndExplosions(Vector2i matches[], int matchCount)
 		Gem* g = grid[r][c];
 		if (!g)continue;
 
-		const int radius = g->onMatch(*(Board*)this);
+		const int radius = g->onMatch(*(BoardLogic*)this);
 		if (radius <= 0)continue;
 		int rStart = r - radius; if (rStart < 0)rStart = 0;
 		int rEnd = r + radius; if (rEnd >= height)rEnd = height - 1;
@@ -111,6 +111,7 @@ void BoardLogic::applyOnMatchAndExplosions(Vector2i matches[], int matchCount)
 		for (int nr = rStart; nr <= rEnd; nr++) {
 			for (int nc = cStart; nc <= cEnd; nc++) {
 				grid[nr][nc]->markForClear();
+				grid[nr][nc]->setType(-1);
 			}
 		}
 
@@ -157,34 +158,9 @@ void BoardLogic::applyOnMatchAndExplosions(Vector2i matches[], int matchCount)
 	bool BoardLogic::isMoving() {
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
-				if (grid[i][j]->getType() == -1) continue;
-				if (grid[i][j]->getX() != j * 64 || grid[i][j]->getY() != i * 64) {
-					return true;
-				}
+				if (!grid[i][j]->isIdle())return true;
 			}
 		}
 		return false;
 	}
-	void BoardLogic::loadTextures() {
-		for (int i = 0; i < 5; i++) {
-			string path = "imagenes/gem" + to_string(i) + ".png";
-			if (!textures[i].loadFromFile(path)) {
-				cout << "No se pudo cargar " << path << ", usando color sólido\n";
-				Image img; img.create(64, 64, sf::Color(50 * (i + 1), 80 * (i + 1), 100));
-				textures[i].loadFromImage(img);
-			}
-		}
-	}
-	void BoardLogic::draw(RenderWindow & window) {
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
-				int type = grid[i][j]->getType();
-				if (type == -1)continue;
-				if (!textures[type].getSize().x)continue;
-				Sprite sprite;
-				sprite.setTexture(textures[type]);
-				sprite.setPosition(grid[i][j]->getX(), grid[i][j]->getY());
-				window.draw(sprite);
-			}
-		}
-	}
+	
