@@ -4,6 +4,9 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Gem.h"
+#include "NormalGem.h"
+#include "BombGem.h"
+#include "IceGem.h"
 
 #define MAX_MATCHES 64
 using namespace sf;
@@ -29,7 +32,7 @@ public:
 	void refill();
 	bool isMoving();
 
-	int getWitdht()const { return width; }
+	int getWidht()const { return width; }
 	int getHeight() const { return height; }
 	Gem* get(int c, int r) const { return grid[r][c]; }
 };

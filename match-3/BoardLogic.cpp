@@ -1,5 +1,5 @@
 #include "BoardLogic.h"
-#include "SpecialGem.h"
+
 BoardLogic::BoardLogic(int w, int h) : width(w), height(h) {
 	srand(time(NULL));
 	grid = new Gem * *[height];
@@ -7,8 +7,13 @@ BoardLogic::BoardLogic(int w, int h) : width(w), height(h) {
 		grid[i] = new Gem * [width];
 		for (int j = 0; j < width; j++) {
 			int type = rand() % 5;
-			grid[i][j] = new SpecialGem(type, j * 64, i * 64,NORMAL);
-			grid[i][j]->setGrid(j, i);
+			if ((rand() % 7) == 0) {
+				grid[i][j] = new IceGem(type, j * 64, i * 64);
+			}
+			else {
+				grid[i][j] = new NormalGem(type, j * 64, i * 64);
+			}
+				grid[i][j]->setGrid(j, i);
 		}
 	}
 	Vector2i tmp[MAX_MATCHES];
@@ -40,8 +45,8 @@ void BoardLogic::swapGems(sf::Vector2i a, sf::Vector2i b) {
 	Gem* temp = grid[a.y][a.x];
 	grid[a.y][a.x] = grid[b.y][b.x];
 	grid[b.y][b.x] = temp;
-	grid[a.y][a.x]->setTargetPosition(a.x * 64, a.y * 64);
-	grid[b.y][b.x]->setTargetPosition(b.x * 64, b.y * 64);
+	grid[a.y][a.x]->setGrid(a.x, a.y);
+	grid[b.y][b.x]->setGrid(b.x, b.y);
 }
 int BoardLogic::findMatches(Vector2i matches[], int maxMatches) {
 	int count = 0;
@@ -91,8 +96,14 @@ void BoardLogic::promoteIfRun4Plus(Vector2i matches[], int matchCount)
 {
 	if (matchCount < 4)return;
 	const int c = matches[0].x, r = matches[0].y;
-	SpecialGem* g = (SpecialGem*)grid[r][c];
-	if (g)g->setSpecial(BOMB);
+	Gem* old= grid[r][c];
+	if (!old) return;
+	if (dynamic_cast<BombGem*>(old))return;
+	const int t = old->getType();
+	const int px = old->getX(), py = old->getY();
+	delete old;
+	grid[r][c] = new BombGem(t, px, py);
+	grid[r][c]->setGrid(c, r);
 }
 void BoardLogic::applyOnMatchAndExplosions(Vector2i matches[], int matchCount)
 {
@@ -102,7 +113,7 @@ void BoardLogic::applyOnMatchAndExplosions(Vector2i matches[], int matchCount)
 		Gem* g = grid[r][c];
 		if (!g)continue;
 
-		const int radius = g->onMatch(*(BoardLogic*)this);
+		int radius = g->onMatch(*(BoardLogic*)this);
 		if (radius <= 0)continue;
 		int rStart = r - radius; if (rStart < 0)rStart = 0;
 		int rEnd = r + radius; if (rEnd >= height)rEnd = height - 1;
@@ -111,10 +122,8 @@ void BoardLogic::applyOnMatchAndExplosions(Vector2i matches[], int matchCount)
 		for (int nr = rStart; nr <= rEnd; nr++) {
 			for (int nc = cStart; nc <= cEnd; nc++) {
 				grid[nr][nc]->markForClear();
-				grid[nr][nc]->setType(-1);
 			}
 		}
-
 	}
 }
 	void BoardLogic::removeMatches(Vector2i matches[], int matchCount)

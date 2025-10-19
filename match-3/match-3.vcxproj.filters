@@ -33,10 +33,16 @@
     <ClCompile Include="GameUI.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="SpecialGem.cpp">
+    <ClCompile Include="BoardRender.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="BoardRender.cpp">
+    <ClCompile Include="BombGem.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClCompile>
+    <ClCompile Include="IceGem.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClCompile>
+    <ClCompile Include="IceGem.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,16 +56,16 @@
     <ClInclude Include="Game.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="Objective.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="GameUI.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="SpecialGem.h">
+    <ClInclude Include="BoardRender.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="BoardRender.h">
+    <ClInclude Include="NormalGem.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Objective.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

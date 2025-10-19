@@ -7,7 +7,7 @@ using namespace sf;
 class BoardRender
 {
 private:
-	Texture textures[5];
+	Texture textures[7];
 public:
 	void loadTextures();
 	void draw(RenderWindow& window, BoardLogic& logic);

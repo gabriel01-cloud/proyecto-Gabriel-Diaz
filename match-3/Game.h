@@ -6,33 +6,34 @@
 #include <iostream>
 #include "BoardLogic.h"
 #include "BoardRender.h"
+#include "Objective.h"
+#include "GameUI.h"
+
 using namespace sf;
 using namespace std;
-struct Button {
-	RectangleShape shape;
-	Text text;
-};
+
 class Game {
 private:
 	RenderWindow* window;
 	BoardLogic* logic;
 	BoardRender renderBoard;
-	Font font;
-	Text scoreText;
 	int score;
 	int moves;
-	bool firstSelected;
-	Vector2i firstCell;
+	Font font;
 
 	Texture backgroundTexture;
 	Sprite backgroundSprite;
 
+	bool firstSelected;
+	Vector2i firstCell;
+
+	Objective objective;
+	GameUI gameUI;
+
 	void handleClick(Vector2i cell);
 	void resolveMatches();
 
-	RectangleShape createButton(Vector2f size, Vector2f position, Color color);
-	Text createText(const string& str, Font& font, unsigned int size, Color color, Vector2f position);
-	bool isButtonClicked(RenderWindow& window, RectangleShape& button, Event& event);
+	
 public:
 	Game();
 	~Game();
@@ -41,9 +42,6 @@ public:
 	void processEvents();
 	void update();
 	void render();
-
-	void showStartScreen();
-	void showEndScreen();
 };
 
 #endif

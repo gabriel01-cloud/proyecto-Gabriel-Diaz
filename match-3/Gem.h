@@ -6,7 +6,7 @@
 class BoardLogic;
 
 class Gem {
-private:
+protected:
 	int type;
 	int x, y;
 	int targetX, targetY;
