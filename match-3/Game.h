@@ -8,31 +8,33 @@
 #include "BoardRender.h"
 #include "Objective.h"
 #include "GameUI.h"
+#include "LevelManager.h"
 
 using namespace sf;
 using namespace std;
 
 class Game {
 private:
-	RenderWindow* window;
-	BoardLogic* logic;
-	BoardRender renderBoard;
-	int score;
-	int moves;
-	Font font;
+	RenderWindow* gameWindow;
+	BoardLogic* boardLogic;
+	BoardRender boardRenderer;
+	int playerScore;
+	int remainingMoves;
+	Font uiFontAsset;
 
 	Texture backgroundTexture;
 	Sprite backgroundSprite;
 
-	bool firstSelected;
-	Vector2i firstCell;
+	bool isFirstCellSelected;
+	Vector2i selectedCell;
 
-	Objective objective;
+	Objective levelObjective;
 	GameUI gameUI;
+	LevelManager levelManager;
 
 	void handleClick(Vector2i cell);
-	void resolveMatches();
-
+	void resolveAllMatches();
+	void loadCurrentLevel();
 	
 public:
 	Game();

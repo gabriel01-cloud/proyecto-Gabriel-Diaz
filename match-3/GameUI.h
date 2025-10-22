@@ -8,16 +8,16 @@ using namespace std;
 class GameUI
 {
 private:
-	Objective* objective;
-	Font* font;
-	RectangleShape panel;
+	Objective* levelObjective;
+	Font* uiFont;
+	RectangleShape sidePanel;
 	Text titleText;
-	Text lines[5];
-	Text scoreMovesText;
-	RectangleShape colorSwatch[5];
+	Text objectiveLines[5];
+	Text scoreAndMovesText;
+	RectangleShape objectiveSwatches[5];
 public:
 	GameUI();
-	void init(Font* uiFont);
+	void init(Font* fontPtr);
 	void setObjective(Objective* obj);
 	void setScoreMoves(int score, int moves);
 	void refreshObjectiveView();
@@ -29,4 +29,6 @@ public:
 	bool isButtonClicked(RenderWindow& window, RectangleShape& button, Event& event);
 	bool showStartScreen(RenderWindow& window);
 	int showEndScreen(RenderWindow& window, int finalScore);
+	int showResultScreen(RenderWindow& window,bool won, int finalScore, int levelIndex, bool hasNext);
+
 };

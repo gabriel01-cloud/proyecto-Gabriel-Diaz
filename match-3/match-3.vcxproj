@@ -141,8 +141,8 @@ sfml-system-d.lib
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameUI.cpp" />
     <ClCompile Include="Gem.cpp" />
-    <ClCompile Include="IceGem.cpp" />
     <ClCompile Include="IceGem.h" />
+    <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="match-3.cpp" />
     <ClCompile Include="Objective.cpp" />
   </ItemGroup>
@@ -152,6 +152,7 @@ sfml-system-d.lib
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameUI.h" />
     <ClInclude Include="Gem.h" />
+    <ClInclude Include="LevelManager.h" />
     <ClInclude Include="NormalGem.h" />
     <ClInclude Include="Objective.h" />
   </ItemGroup>

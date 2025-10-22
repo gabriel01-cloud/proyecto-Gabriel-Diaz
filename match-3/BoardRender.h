@@ -7,9 +7,8 @@ using namespace sf;
 class BoardRender
 {
 private:
-	Texture textures[7];
+	Texture gemTextures[7];
 public:
 	void loadTextures();
-	void draw(RenderWindow& window, BoardLogic& logic);
+	void draw(RenderWindow& window, BoardLogic& boardLogic);
 };
-

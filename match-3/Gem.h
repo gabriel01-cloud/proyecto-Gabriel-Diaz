@@ -7,32 +7,43 @@ class BoardLogic;
 
 class Gem {
 protected:
-	int type;
-	int x, y;
+	int gemType;
+	int posX, posY;
 	int targetX, targetY;
-	int col, row;
-	int alpha;
-	bool animClearing;
-	bool marked;
+	int gridCol, gridRow;
+	int fadeAlpha;
+	bool isClearingAnim;
+	bool isMarkedForDeletion;
+	static int sMoveSpeed;
+	static int sAlphaStep;
+	bool justPromoted = false;
+
 public:
 	Gem(int t, int posX, int posY);
 	virtual~Gem() {}
 
 	virtual int onMatch(BoardLogic& board) = 0;
 	virtual void update();
+	virtual void draw(sf::RenderTarget& rt)const {}
+	static void setAnimationSpeeds(int moveSpeed, int alphaStep);
+	virtual int getType() const { return gemType; }
+	void setType(int t) { gemType = t; }
 
-	int getType() const { return type; }
-	void setType(int t) { type = t; }
-	int getX() const { return x; }
-	int getY() const { return y; }
+	int getX() const { return posX; }
+	int getY() const { return posY; }
 
-	void setPosition(int posX, int posY);
-	void setTargetPosition(int posX, int posY);
-	void setGrid(int c, int r);
+	void setPosition(int newX, int newY);
+	void setTargetPosition(int newX, int newY);
+	void setGrid(int col, int row);
 
-	void markForClear() { animClearing = true; }
-	bool isMarked()const { return marked; }
-	bool isIdle()const { return x == targetX && y == targetY && !animClearing; }
+	void markForClear() { isClearingAnim = true; }
+	bool isMarked()const { return isMarkedForDeletion; }
+	bool isIdle()const { return posX == targetX && posY == targetY && !isClearingAnim; }
+	int getAlpha()const { return fadeAlpha; }
+	void resetAlpha() { fadeAlpha = 255; }
+	void setJustPromoted(bool v) { justPromoted = v; }
+	bool wasJustPromoted() const { return justPromoted; } 
+	void clearJustPromoted() { justPromoted = false; }
 };
 
 #endif

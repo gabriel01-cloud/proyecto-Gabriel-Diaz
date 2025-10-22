@@ -6,32 +6,32 @@ void Objective::setTarget(int type, int amount)
 {
 	if (type < 0 || type >= 5)return;
 	if (amount < 0)amount = 0;
-	targets[type] = amount;
+	targetCount[type] = amount;
 }
 
 void Objective::addProgress(int type, int amount)
 {
 	if (type < 0 || type >= 5)return;
 	if (amount <= 0)return;
-	progress[type] += amount;
+	progressCount[type] += amount;
 }
 
 int Objective::getTarget(int type) const
 {
 	if (type < 0 || type >= 5)return 0;
-	return targets[type];
+	return targetCount[type];
 }
 
 int Objective::getProgress(int type) const
 {
 	if (type < 0 || type >= 5) return 0;
-	return progress[type];
+	return progressCount[type];
 }
 
 bool Objective::isCompleted() const
 {
 	for (int i = 0; i < 5; i++) {
-		if (targets[i] > 0 && progress[i] < targets[i])return false;
+		if (targetCount[i] > 0 && progressCount[i] < targetCount[i])return false;
 	}
 	return true;
 }
@@ -39,7 +39,7 @@ bool Objective::isCompleted() const
 void Objective::reset()
 {
 	for (int i = 0; i < 5; i++) {
-		targets[i] = 0; 
-		progress[i] = 0;
+		targetCount[i] = 0; 
+		progressCount[i] = 0;
 	}
 }

@@ -1,37 +1,51 @@
 #include "Gem.h"
 
-Gem::Gem(int t, int posX, int posY) : col(posX / 64), row(posY / 64), alpha(255), animClearing(false), marked(false) {
-	type = t;
-	x = posX;
-	y = posY;
+int Gem::sMoveSpeed = 3;
+int Gem::sAlphaStep = 10;
+Gem::Gem(int t, int posX, int posY) : gridCol(posX / 64), gridRow(posY / 64), fadeAlpha(255), isClearingAnim(false), isMarkedForDeletion(false) {
+	gemType = t;
+	this->posX = posX;
+	 this->posY= posY;
 	targetX = posX;
 	targetY = posY;
 }
-void Gem::setPosition(int posX, int posY) {
-	x = posX;
-	y = posY;
+void Gem::setPosition(int newX, int newY) {
+	posX = newX;
+	posY = newY;
 }
-void Gem::setTargetPosition(int posX, int posY) {
-	targetX = posX;
-	targetY = posY;
+void Gem::setTargetPosition(int newX, int newY) {
+	targetX = newX;
+	targetY = newY;
 }
-void Gem::setGrid(int c, int r) {
-	col = c;
-	row = r;
-	setTargetPosition(c * 64, r * 64);
+void Gem::setGrid(int col, int row) {
+	gridCol = col;
+	gridRow= row;
+	setTargetPosition(col * 64, row * 64);
 }
 void Gem::update() {
-	const int speed = 5;
-	if (y < targetY) { y += speed; if (y > targetY)y = targetY; }
-	if (y > targetY) { y -= speed; if (y < targetY)y = targetY; }
-	if (x < targetY) { x += speed; if (x > targetX)x = targetX; }
-	if (x > targetX) { x -= speed; if (x < targetX)x = targetX; }
-	if (animClearing) {
-		alpha -= 20;
-		if (alpha < 0)alpha = 0;
-		if (alpha == 0) {
-			animClearing = false;
-			marked = true;
-		}
-	}
+    const int speed = sMoveSpeed;
+    if (posY < targetY) { posY += speed; if (posY > targetY) posY = targetY; }
+    if (posY > targetY) { posY -= speed; if (posY < targetY) posY = targetY; }
+    if (posX < targetX) { posX += speed; if (posX > targetX) posX = targetX; }
+    if (posX > targetX) { posX -= speed; if (posX < targetX) posX = targetX; }
+
+    if (isClearingAnim) {
+        fadeAlpha -= 20;
+    }
+    if(isClearingAnim){
+        fadeAlpha -= sAlphaStep;
+        if (fadeAlpha < 0) fadeAlpha = 0;
+        if (fadeAlpha == 0) {
+            isClearingAnim = false;
+            isMarkedForDeletion = true;
+        }
+    }
+}
+
+void Gem::setAnimationSpeeds(int moveSpeed, int alphaStep)
+{
+    if (moveSpeed <= 0)moveSpeed = 1;
+    if (alphaStep <= 0)alphaStep = 1;
+    sMoveSpeed = moveSpeed;
+    sAlphaStep = alphaStep;
 }

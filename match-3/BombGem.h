@@ -9,6 +9,6 @@ public:
 	BombGem(int t, int posX, int posY) :Gem(t, posX, posY) {}
 	int onMatch(BoardLogic& board)override {
 		markForClear();
-		return 1;
+		return 3;
 	}
 };

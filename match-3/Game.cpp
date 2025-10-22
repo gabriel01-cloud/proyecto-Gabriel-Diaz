@@ -1,37 +1,59 @@
 ﻿#include "Game.h"
+#include "Gem.h"
 
-using namespace sf;
-using namespace std;
-Game::Game() {
-	window = new RenderWindow(VideoMode(800, 600), "Match-3", Style::Close);
-	logic = new BoardLogic(8, 8);
-	renderBoard.loadTextures();
-	score = 0;
-	moves = 20;
+Game::Game(): boardLogic(nullptr), playerScore(0),remainingMoves(0) {
+	gameWindow = new RenderWindow(VideoMode(800, 600), "Match-3", Style::Close);
+	
+	boardRenderer.loadTextures();
 
-	if (!font.loadFromFile("imagenes/arial.ttf")) {
+	if (!uiFontAsset.loadFromFile("imagenes/arial.ttf")) {
 		cout << "No se pudo cargar la fuente\n";
 	}
 	if (!backgroundTexture.loadFromFile("imagenes/fondo.png"))
 		cout << "No se pudo abrir fondo";
 	backgroundSprite.setTexture(backgroundTexture);
 	backgroundSprite.setScale(800.0f / backgroundTexture.getSize().x, 600.0f / backgroundTexture.getSize().y);
-	firstSelected = false;
-	firstCell = { -1,-1 };
-	gameUI.init(&font);
-	gameUI.setObjective(&objective);
-	objective.reset();
-	objective.setTarget(0, 10);
-	objective.setTarget(3, 8);
-	gameUI.setScoreMoves(score, moves);
+	
+	Gem::setAnimationSpeeds(3, 8);
+
+	isFirstCellSelected = false;
+	selectedCell = { -1,-1 };
+	gameUI.init(&uiFontAsset);
+	gameUI.setObjective(&levelObjective);
+	loadCurrentLevel();
 }
+
 Game::~Game() {
-	delete logic;
-	delete window;
+	delete boardLogic;
+	delete gameWindow;
+}
+void Game::loadCurrentLevel() {
+	const LevelDef& L = levelManager.current();
+	if (boardLogic)delete boardLogic;
+	boardLogic = new BoardLogic(
+		L.width, L.height,
+		L.iceChancePercent,
+		L.avoidRefillMatches,
+		L.cascadeDampingPercent,
+		L.promoteRun4ChancePercent
+	);
+	if (L.iceInitialCount > 0) {
+		boardLogic->applyInitialIce(L.iceInitialCount);
+	}
+	playerScore = 0;
+	remainingMoves = L.moves;
+	levelObjective.reset();
+	for (int i = 0; i < 5; i++) {
+		if (L.targets[i] > 0) {
+			levelObjective.setTarget(i, L.targets[i]);
+		}
+	}
+	gameUI.refreshObjectiveView();
+	gameUI.setScoreMoves(playerScore,remainingMoves);
 }
 void Game::run() {
-	if (!gameUI.showStartScreen(*window))return;
-	while (window->isOpen()) {
+	if (!gameUI.showStartScreen(*gameWindow))return;
+	while (gameWindow->isOpen()) {
 		processEvents();
 		update();
 		render();
@@ -39,42 +61,39 @@ void Game::run() {
 }
 
 void Game::handleClick(Vector2i cell) {
-	if (!firstSelected) {
-		firstSelected = true;
-		firstCell = cell;
+	if (!isFirstCellSelected) {
+		isFirstCellSelected = true;
+		selectedCell = cell;
 		return;
 	}
-	int dx = abs(firstCell.x - cell.x);
-	int dy = abs(firstCell.y - cell.y);
+	int dx = abs(selectedCell.x - cell.x);
+	int dy = abs(selectedCell.y - cell.y);
 	if (dx + dy != 1) {
 		cout << " No son adyacentes\n";
-		firstSelected = false;
+		isFirstCellSelected = false;
 		return;
 	}
-	logic->swapGems(firstCell, cell);
-
-	Vector2i matches[MAX_MATCHES];
-	int count = logic->findMatches(matches, MAX_MATCHES);
-	if (count == 0) {
-		logic->swapGems(firstCell, cell);
+	bool ok= boardLogic->attemptSwapAndResolve(selectedCell, cell);
+	if (!ok) {
 		cout << "Swap revertido: no se genero combinacion\n";
-		firstSelected = false;
+		isFirstCellSelected = false;
 		return;
 	}
-	resolveMatches();
-	firstSelected = false;
+	resolveAllMatches();
+	isFirstCellSelected = false;
 }
 void Game::processEvents() {
 	Event event;
-	while (window->pollEvent(event)) {
-		if (event.type == Event::Closed) window->close();
+	while (gameWindow->pollEvent(event)) {
+		if (event.type == Event::Closed) gameWindow->close();
 
 		if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
-			Vector2i mousePos = Mouse::getPosition(*window);
+			if (boardLogic->isMoving())continue;
+			Vector2i mousePos = Mouse::getPosition(*gameWindow);
 			int col = mousePos.x / 64;
 			int row = mousePos.y / 64;
 
-			if (col >= 0 && col < logic->getWidht() && row >= 0 && row < logic->getHeight()) {
+			if (col >= 0 && col < boardLogic->getWidht() && row >= 0 && row < boardLogic->getHeight()) {
 				handleClick({ col,row });
 			}
 		}
@@ -82,79 +101,122 @@ void Game::processEvents() {
 }
 
 void Game::update() {
-	gameUI.setScoreMoves(score, moves);
-
-	if (moves <= 0) {
-		int choice = gameUI.showEndScreen(*window, score);
-		if (choice == 1) {
-			delete logic;
-			logic = new BoardLogic(8, 8);
-			score = 0;
-			moves = 20;
-			firstSelected = false;
-			firstCell = { -1,-1 };
-			objective.reset();
-			objective.setTarget(0, 10);
-			objective.setTarget(3, 8);
-			gameUI.refreshObjectiveView();
+	gameUI.setScoreMoves(playerScore, remainingMoves);
+	if(levelObjective.isCompleted()) {
+		bool hasNext = levelManager.currentIndex() < levelManager.total();
+		int choice = gameUI.showResultScreen(*gameWindow,true, playerScore,levelManager.currentIndex(),hasNext);
+		if (choice == 1&&hasNext) {
+			levelManager.advance();
+			loadCurrentLevel();
 			return;
 		}
-		else {
-			window->close();
+		if(choice==0){
+			if (!gameUI.showStartScreen(*gameWindow)) {
+				gameWindow->close(); return;
+			}
+			loadCurrentLevel();
 			return;
 		}
+		if (choice == 2) {
+			loadCurrentLevel();
+			return;
+		}
+		gameWindow->close();
+		return;
+	}
+	if (remainingMoves <= 0) {
+		bool hasNext = false;
+		int choice = gameUI.showResultScreen(*gameWindow, false, playerScore, levelManager.currentIndex(), hasNext);
+		if (choice == 0) {
+			if (!gameUI.showStartScreen(*gameWindow)) {
+				gameWindow->close();
+				return;
+			}
+			loadCurrentLevel();
+			return;
+		}
+		gameWindow->close();
+		return;
 	}
 }
 
 void Game::render() {
-	window->clear();
-	window->draw(backgroundSprite);
-	renderBoard.draw(*window, *logic);
-	if (firstSelected) {
+	gameWindow->clear();
+	gameWindow->draw(backgroundSprite);
+	boardRenderer.draw(*gameWindow, *boardLogic);
+	if (isFirstCellSelected) {
 		RectangleShape outline(Vector2f(64, 64));
-		outline.setPosition(firstCell.x * 64, firstCell.y * 64);
+		outline.setPosition(selectedCell.x * 64, selectedCell.y * 64);
 		outline.setFillColor(Color::Transparent);
 		outline.setOutlineColor(Color::Red);
 		outline.setOutlineThickness(3);
-		window->draw(outline);
+		gameWindow->draw(outline);
 	}
-	gameUI.draw(*window);
-	window->display();
+	gameUI.draw(*gameWindow);
+	gameWindow->display();
 }
 
-void Game::resolveMatches() {
-	Vector2i matches[MAX_MATCHES];
-	int count = logic->findMatches(matches, MAX_MATCHES);
-	bool validMove = (count > 0);
+void Game::resolveAllMatches() {
+	bool bombSwap = boardLogic->consumeLastSwapTriggeredBomb();
+
+	if (bombSwap) {
+		boardLogic->suppressNextPromotion();
+	}
+
+	sf::Vector2i matched[MAX_MATCHES];
+	int count = boardLogic->findMatches(matched, MAX_MATCHES);
+
+	bool validMove = bombSwap || (count > 0);
 	if (validMove) {
-		moves--;
+		remainingMoves--;
+		gameUI.setScoreMoves(playerScore, remainingMoves);
+	}
+
+	if (bombSwap) {
+		render();
+
+		boardLogic->dropGems();
+		while (boardLogic->isMoving() && gameWindow->isOpen()) {
+			boardLogic->update();
+			render();
+		}
+
+		boardLogic->refill();
+		while (boardLogic->isMoving() && gameWindow->isOpen()) {
+			boardLogic->update();
+			render();
+		}
+
+		count = boardLogic->findMatches(matched, MAX_MATCHES);
 	}
 
 	while (count > 0) {
-		if (count >= 4)logic->promoteIfRun4Plus(matches, count);
+		if (count >= 4) boardLogic->promoteRunOfFourOrMore(matched, count);
+
 		for (int i = 0; i < count; i++) {
-			int cx = matches[i].x, cy = matches[i].y;
-			int type = logic->get(cx, cy)->getType();
-			if (type >= 0 && type < 5)objective.addProgress(type, 1);
+			int cx = matched[i].x, cy = matched[i].y;
+			int type = boardLogic->get(cx, cy)->getType();
+			if (type >= 0 && type < 5) levelObjective.addProgress(type, 1);
 		}
 		gameUI.refreshObjectiveView();
-		logic->applyOnMatchAndExplosions(matches, count);
-		logic->removeMatches(matches, count);
-		score += count * 10;
+
+		boardLogic->applyMatchEffectsAndExplosions(matched, count);
+		boardLogic->removeMatchedCells(matched, count);
+		playerScore += count * 10;
 
 		render();
-		logic->dropGems();
-		while (logic->isMoving() && window->isOpen()) {
-			logic->update();
+		boardLogic->dropGems();
+		while (boardLogic->isMoving() && gameWindow->isOpen()) {
+			boardLogic->update();
 			render();
 		}
 
-		logic->refill();
-		while (logic->isMoving() && window->isOpen()) {
-			logic->update();
+		boardLogic->refill();
+		while (boardLogic->isMoving() && gameWindow->isOpen()) {
+			boardLogic->update();
 			render();
 		}
-		count = logic->findMatches(matches, MAX_MATCHES);
+
+		count = boardLogic->findMatches(matched, MAX_MATCHES);
 	}
-	
 }
