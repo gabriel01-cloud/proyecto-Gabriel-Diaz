@@ -98,9 +98,8 @@ Posibilidad de avanzar al siguiente nivel o volver al menu.
 | **Fase 2** | Manejo de errores, mejora visual y menús interactivos | ✅ Completada     |
 | **Fase 3** | Sistema de guardado XML, ranking y progreso           | 🕓 En desarrollo |
 
-## Diagrama de Clases (Resumen)
+## Diagrama de Clases
 
-```mermaid
 classDiagram
     direction LR
 
@@ -130,16 +129,3 @@ classDiagram
     BoardRender --> BoardLogic
     GameUI --> Objective
     LevelManager --> LevelDef
-
----
-
-### Explicación rápida
-- **Herencia (`<|--`)**  
-  Las gemas (`NormalGem`, `BombGem`, `IceGem`) heredan de la clase base `Gem`.
-
-- **Dependencias (`-->`)**  
-  Indican qué clases usan a otras:  
-  - `Game` usa a `BoardLogic`, `GameUI`, `LevelManager`, etc.  
-  - `BoardLogic` controla las instancias de `Gem`.  
-  - `GameUI` muestra el progreso (`Objective`).  
-  - `LevelManager` maneja la configuración del `LevelDef`.
