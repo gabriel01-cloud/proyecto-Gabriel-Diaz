@@ -3,6 +3,10 @@
 #define BOARDLOGIC_H
 #include <SFML/Graphics.hpp>
 #include <iostream>
+<<<<<<< HEAD
+=======
+#include <stdexcept>
+>>>>>>> 2175d52 (Agregar archivos de proyecto.)
 #include "Gem.h"
 #include "NormalGem.h"
 #include "BombGem.h"
@@ -44,9 +48,15 @@ public:
 	void refill();
 	bool isMoving();
 
+<<<<<<< HEAD
 	int getWidht()const { return boardWidth; }
 	int getHeight() const { return boardHeight; }
 	Gem* get(int c, int r) const { return gemGrid[r][c]; }
+=======
+	int getWidth()const { return boardWidth; }
+	int getHeight() const { return boardHeight; }
+	Gem* get(int c, int r);
+>>>>>>> 2175d52 (Agregar archivos de proyecto.)
 	
 	bool inBounds(const Vector2i& p) const { return p.x >= 0 && p.y >= 0 && p.x < boardWidth && p.y < boardHeight;}
 	bool attemptSwapAndResolve(Vector2i a, Vector2i b);

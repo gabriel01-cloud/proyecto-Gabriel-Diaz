@@ -1,6 +1,11 @@
 #include "BoardRender.h"
 #include "BombGem.h"
 #include "IceGem.h"
+<<<<<<< HEAD
+=======
+#include <string>
+
+>>>>>>> 2175d52 (Agregar archivos de proyecto.)
 using namespace std;
 
 void BoardRender::loadTextures() {
@@ -18,14 +23,22 @@ void BoardRender::loadTextures() {
 		Image img; img.create(64, 64, Color(255, 100, 100));
 		gemTextures[5].loadFromImage(img);
 	}
+<<<<<<< HEAD
 	if (!gemTextures[6].loadFromFile("imagenes/gem_ice.png")) {
+=======
+	if (!gemTextures[6].loadFromFile("imagenes/gemice.png")) {
+>>>>>>> 2175d52 (Agregar archivos de proyecto.)
 		Image img; img.create(64, 64, Color(120, 230, 255, 160));
 		gemTextures[6].loadFromImage(img);
 	}
 }
 void BoardRender::draw(RenderWindow& window, BoardLogic& boardLogic) {
     const int H = boardLogic.getHeight();
+<<<<<<< HEAD
     const int W = boardLogic.getWidht();
+=======
+    const int W = boardLogic.getWidth();
+>>>>>>> 2175d52 (Agregar archivos de proyecto.)
 
     for (int i = 0; i < H; ++i) {
         for (int j = 0; j < W; ++j) {

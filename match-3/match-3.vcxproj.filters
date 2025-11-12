@@ -45,6 +45,15 @@
     <ClCompile Include="LevelManager.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+<<<<<<< HEAD
+=======
+    <ClCompile Include="ProgressManager.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="RankingManager.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+>>>>>>> 2175d52 (Agregar archivos de proyecto.)
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Gem.h">
@@ -71,5 +80,14 @@
     <ClInclude Include="LevelManager.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="ProgressManager.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="RankingManager.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+>>>>>>> 2175d52 (Agregar archivos de proyecto.)
   </ItemGroup>
 </Project>

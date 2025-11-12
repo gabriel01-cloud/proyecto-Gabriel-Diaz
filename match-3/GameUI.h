@@ -14,6 +14,12 @@ private:
 	Text titleText;
 	Text objectiveLines[5];
 	Text scoreAndMovesText;
+<<<<<<< HEAD
+=======
+	Texture gemIconTextures[5];
+	Sprite gemIconSprites[5];
+	bool gemIconLoaded[5];
+>>>>>>> 2175d52 (Agregar archivos de proyecto.)
 	RectangleShape objectiveSwatches[5];
 public:
 	GameUI();
@@ -25,10 +31,20 @@ public:
 
 	RectangleShape createButton(Vector2f size, Vector2f position, Color color);
 	Text createText(const string& str, Font& font, unsigned int size, Color color, Vector2f position);
+<<<<<<< HEAD
 
 	bool isButtonClicked(RenderWindow& window, RectangleShape& button, Event& event);
 	bool showStartScreen(RenderWindow& window);
 	int showEndScreen(RenderWindow& window, int finalScore);
 	int showResultScreen(RenderWindow& window,bool won, int finalScore, int levelIndex, bool hasNext);
+=======
+	bool isButtonClicked(RenderWindow& window, RectangleShape& button, Event& event);
+	
+	int showStartScreen(RenderWindow& window);
+	int showEndScreen(RenderWindow& window, int finalScore);
+	int showResultScreen(RenderWindow& window,bool won, int finalScore, int levelIndex, bool hasNext);
+	int showLevelSelectScreen(RenderWindow& window, int totalLevels, int maxUnlocked, int completedMax);
+	bool promptPlayersName(RenderWindow& window, string& outName, const string& defaultName = "Player");
+>>>>>>> 2175d52 (Agregar archivos de proyecto.)
 
 };
