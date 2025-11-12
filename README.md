@@ -1,4 +1,4 @@
-# 🧩 Zombie Match-3
+# Zombie Match-3
 
 Juego tipo Match-3 desarrollado en **C++** con **SFML 2.6.2**, como proyecto académico dividido en tres fases.
 
@@ -7,7 +7,7 @@ En fases posteriores se implementará carga de niveles desde XML y sistema de ra
 
 ---
 
-## 🎯 Objetivo del Proyecto
+## Objetivo del Proyecto
 
 - Aplicar Programación Orientada a Objetos (POO) en C++  
 - Implementar manejo de archivos y estructuras de datos  
@@ -16,14 +16,14 @@ En fases posteriores se implementará carga de niveles desde XML y sistema de ra
 
 ---
 
-## ⚙️ Instrucciones de Instalación
+## Instrucciones de Instalación
 
-### 🔸 Requisitos
+### Requisitos
 - **Sistema operativo:** Windows 10 / 11  
 - **Compilador:** MinGW o Visual Studio 2022  
 - **Librería gráfica:** [SFML 2.6.2](https://www.sfml-dev.org/download.php)
 
-### 🔸 Compilación
+### Compilación
 1. Clona el repositorio:
    ```bash
    git clone https://github.com/gabriel01-cloud/proyecto-Gabriel-Diaz.git
@@ -42,31 +42,28 @@ Compila y ejecuta el programa.
 
 # Controles del Juego
 
-| Acción                             | Descripción                         |
-| ---------------------------------- | ----------------------------------- |
-| 🖱️ Click izquierdo                | Selecciona una gema                 |
-| 🖱️ Click izquierdo (segunda gema) | Intercambia dos gemas adyacentes    |
-| 🔁 Match automático               | Elimina combinaciones de 3 o más    |
-| 🎯 Objetivos                      | Se muestran en el panel lateral     |
-| ⏹️ Menú                           | Permite reiniciar o salir del juego |
+| Acción                          | Descripción                         |
+| ------------------------------- | ----------------------------------- |
+|  Click izquierdo                | Selecciona una gema                 |
+|  Click izquierdo (segunda gema) | Intercambia dos gemas adyacentes    |
 
 # Estructura Del Proyecto
-📂 proyecto-Gabriel-Diaz
- ├── 📄 main.cpp
- ├── 📄 Game.h / Game.cpp
- ├── 📄 BoardLogic.h / BoardLogic.cpp
- ├── 📄 BoardRender.h / BoardRender.cpp
- ├── 📄 Gem.h / Gem.cpp
- ├── 📄 NormalGem.h
- ├── 📄 BombGem.h
- ├── 📄 IceGem.h
- ├── 📄 Objective.h / Objective.cpp
- ├── 📄 GameUI.h / GameUI.cpp
- ├── 📄 LevelManager.h / LevelManager.cpp
- ├── 📂 imagenes/   ← recursos gráficos (gemas, fondo, etc.)
- ├── 📂 assets/     ← carpeta final del ejecutable
- ├── 📄 README.md
- ├── 📄 CHANGELOG.md
+ proyecto-Gabriel-Diaz
+ ├──  main.cpp
+ ├──  Game.h / Game.cpp
+ ├──  BoardLogic.h / BoardLogic.cpp
+ ├──  BoardRender.h / BoardRender.cpp
+ ├──  Gem.h / Gem.cpp
+ ├──  NormalGem.h
+ ├──  BombGem.h
+ ├──  IceGem.h
+ ├──  Objective.h / Objective.cpp
+ ├──  GameUI.h / GameUI.cpp
+ ├──  LevelManager.h / LevelManager.cpp
+ ├──  imagenes/   ← recursos gráficos (gemas, fondo, etc.)
+ ├──  assets/     ← carpeta final del ejecutable
+ ├──  README.md
+ ├──  CHANGELOG.md
 
 # Clases Principales
 
@@ -92,11 +89,11 @@ Posibilidad de avanzar al siguiente nivel o volver al menu.
 
 # Fases del Proyecto
 
-| Fase       | Contenido                                             | Estado           |
-| ---------- | ----------------------------------------------------- | ---------------- |
-| **Fase 1** | Motor base del juego, tablero y gemas normales        | ✅ Completada     |
-| **Fase 2** | Manejo de errores, mejora visual y menús interactivos | ✅ Completada     |
-| **Fase 3** | Sistema de guardado XML, ranking y progreso           | 🕓 En desarrollo |
+| Fase       | Contenido                                             |
+| ---------- | ----------------------------------------------------- |
+| **Fase 1** | Motor base del juego, tablero y gemas normales        |
+| **Fase 2** | Manejo de errores, mejora visual y menús interactivos |
+| **Fase 3** | Sistema de guardado XML, ranking y progreso           |
 
 ## Diagrama de Clases
 
