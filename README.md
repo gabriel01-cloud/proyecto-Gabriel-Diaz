@@ -25,7 +25,6 @@ En fases posteriores se implementará carga de niveles desde XML y sistema de ra
 
 ### Compilación
 1. Clona el repositorio:
-   ```bash
    git clone https://github.com/gabriel01-cloud/proyecto-Gabriel-Diaz.git
 
 Abre el proyecto en tu IDE o entorno (Code::Blocks o Visual Studio).
@@ -47,6 +46,14 @@ Compila y ejecuta el programa.
 |  Click izquierdo                | Selecciona una gema                 |
 |  Click izquierdo (segunda gema) | Intercambia dos gemas adyacentes    |
 
+## Menú de niveles y progreso
+Al iniciar, el menú principal muestra las opciones:
+JUGAR: abre el selector de niveles donde se pueden elegir los desbloqueados.
+BORRAR PROGRESO: reinicia progreso.xml y el ranking.
+SALIR: cierra el juego.
+Los niveles bloqueados aparecen con color gris y se desbloquean al completar los anteriores.
+El progreso se guarda automáticamente en progreso.xml.
+
 # Estructura Del Proyecto
  proyecto-Gabriel-Diaz
  ├──  main.cpp
@@ -59,16 +66,18 @@ Compila y ejecuta el programa.
  ├──  IceGem.h
  ├──  Objective.h / Objective.cpp
  ├──  GameUI.h / GameUI.cpp
+ ├──  ProgressManager.h / ProgressManager.cpp
+ ├──  RankingManager.h / RankingManger.cpp
  ├──  LevelManager.h / LevelManager.cpp
  ├──  imagenes/   ← recursos gráficos (gemas, fondo, etc.)
  ├──  assets/     ← carpeta final del ejecutable
+ ├──  niveles.xml
  ├──  README.md
  ├──  CHANGELOG.md
 
 # Clases Principales
 
 | Clase                            | Descripción                                                                 |
-| -------------------------------- | --------------------------------------------------------------------------- |
 | `Game`                           | Control principal del juego, ciclo de ejecución, niveles y UI               |
 | `BoardLogic`                     | Lógica del tablero: detección de combinaciones, caída de gemas, promociones |
 | `BoardRender`                    | Renderizado gráfico del tablero y las gemas                                 |
@@ -81,7 +90,7 @@ Compila y ejecuta el programa.
 # Flujo del Programa
 
 Se muestra el menú inicial.
-Se carga el nivel actual con sus objetivos.
+Se carga el selector de niveles y el nivel actual con sus objetivos
 El jugador realiza movimientos válidos → genera matches.
 El tablero resuelve combinaciones y cae automáticamente.
 Al completar los objetivos o agotar movimientos → pantalla de resultados.
@@ -111,6 +120,8 @@ classDiagram
     class NormalGem
     class BombGem
     class IceGem
+    class ProgressManager
+    class RankingManager
 
     Gem <|-- NormalGem
     Gem <|-- BombGem
@@ -121,6 +132,8 @@ classDiagram
     Game --> GameUI
     Game --> Objective
     Game --> LevelManager
+    Game --> ProgressManager
+    Game --> RankingManager
 
     BoardLogic --> Gem
     BoardRender --> BoardLogic
