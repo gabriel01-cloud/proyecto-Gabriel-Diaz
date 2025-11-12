@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Levels>
+  <Level index="1" width="8" height="8" moves="20"
+         iceChancePercent="0" iceInitialCount="0"
+         cascadeDampingPercent="50" promoteRun4ChancePercent="40"
+         avoidRefillMatches="false">
+    <Targets t0="10" t1="0" t2="0" t3="8" t4="0"/>
+  </Level>
+
+  <Level index="2" width="8" height="8" moves="25"
+         iceChancePercent="0" iceInitialCount="10"
+         cascadeDampingPercent="25" promoteRun4ChancePercent="80"
+         avoidRefillMatches="false">
+    <Targets t0="0" t1="0" t2="12" t3="0" t4="0"/>
+  </Level>
+
+  <Level index="3" width="9" height="9" moves="25"
+         iceChancePercent="15" iceInitialCount="12"
+         cascadeDampingPercent="15" promoteRun4ChancePercent="60"
+         avoidRefillMatches="false">
+    <Targets t0="8" t1="0" t2="12" t3="0" t4="0"/>
+  </Level>
+</Levels>
