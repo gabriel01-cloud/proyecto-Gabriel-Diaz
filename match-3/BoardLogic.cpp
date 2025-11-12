@@ -381,6 +381,15 @@ bool BoardLogic::isMoving() {
 	}
 	return false;
 }
+<<<<<<< HEAD
+=======
+Gem* BoardLogic::get(int c, int r)
+{
+	if (r < 0 || r >= boardHeight || c < 0 || c >= boardWidth)
+		throw out_of_range("BoardLogic::get fuera de rango");
+	return gemGrid[r][c];
+}
+>>>>>>> 2175d52 (Agregar archivos de proyecto.)
 bool BoardLogic::attemptSwapAndResolve(Vector2i a, Vector2i b)
 {
 	if (abs(a.x - b.x) + abs(a.y - b.y) != 1) return false;

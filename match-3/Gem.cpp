@@ -28,10 +28,13 @@ void Gem::update() {
     if (posY > targetY) { posY -= speed; if (posY < targetY) posY = targetY; }
     if (posX < targetX) { posX += speed; if (posX > targetX) posX = targetX; }
     if (posX > targetX) { posX -= speed; if (posX < targetX) posX = targetX; }
+<<<<<<< HEAD
 
     if (isClearingAnim) {
         fadeAlpha -= 20;
     }
+=======
+>>>>>>> 2175d52 (Agregar archivos de proyecto.)
     if(isClearingAnim){
         fadeAlpha -= sAlphaStep;
         if (fadeAlpha < 0) fadeAlpha = 0;

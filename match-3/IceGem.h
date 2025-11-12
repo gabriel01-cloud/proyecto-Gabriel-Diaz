@@ -9,7 +9,11 @@ private:
 public:
     IceGem(int t, int posX, int posY) : Gem(t, posX, posY), remainingHits(2) {}
 
+<<<<<<< HEAD
     int onMatch(BoardLogic& board) {
+=======
+    int onMatch(BoardLogic& board) override {
+>>>>>>> 2175d52 (Agregar archivos de proyecto.)
         if (remainingHits > 0) {         
             remainingHits--;
         }
